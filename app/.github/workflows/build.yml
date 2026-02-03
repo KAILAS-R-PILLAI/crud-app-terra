@@ -3,7 +3,7 @@ name: Build and Deploy Crud-App-Master
 on:
   push:
     branches:
-      - main
+      - 
 
 jobs:
   build-and-deploy:
