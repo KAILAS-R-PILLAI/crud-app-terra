@@ -14,7 +14,7 @@ variable "container_port" {
 
 
 variable "image_url" {
-  default = "193086215187.dkr.ecr.ap-south-1.amazonaws.com/crud-app:d9a5c4f1"
+  default = "193086215187.dkr.ecr.ap-south-1.amazonaws.com/crud-app:latest"
 }
 
 variable "acm_certificate_arn" {
