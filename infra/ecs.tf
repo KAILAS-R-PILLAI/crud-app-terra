@@ -10,7 +10,7 @@ resource "aws_cloudwatch_log_group" "this" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family                   = var.app_name
+  family                   = "${var.app_name}-task"   
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 256
@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "this" {
 
 
 resource "aws_ecs_service" "this" {
-  name            = var.app_name
+  name            = "${var.app_name}-service"   
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.this.arn
   desired_count   = 1
