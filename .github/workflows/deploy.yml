@@ -3,14 +3,14 @@ name: Deploy to ECS
 on:
   push:
     branches:
-      -
+      - 
 
 env:
   AWS_REGION: ap-south-1
   ECR_REPO: 193086215187.dkr.ecr.ap-south-1.amazonaws.com/crud-app
-  ECR_CLUSTER: crud-app-cluster
-  ECR_SERVICE: crud-app
-  CONTAINER_NAME: crud-app
+  ECS_CLUSTER: crud-app-cluster
+  ECS_SERVICE: crud-app-service
+  CONTAINER_NAME: crud-app-task
 
 jobs:
  deploy:
@@ -27,5 +27,34 @@ jobs:
          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v2
+     - name: Login to Amazon ECR
+       uses: aws-actions/amazon-ecr-login@v2
+
+     - name: Build and Push docker image
+       working-directory: app
+       run:
+         docker build -t $ECR_REPO:latest .
+         docker push $ECR_REPO:latest
+         echo "IMAGE_URI=$ECR_REPO:latest" >> $GITHUB_ENV
+         
+     - name: Terraform Init
+       working-directory: infra
+       run:
+          terraform init
+
+     - name: Terraform Plan
+       working-directory: infra
+       run: terraform plan 
+          
+     - name: Terraform Apply
+       working-directory: infra
+       run: terraform apply -auto-approve
+
+     - name: Wait for ECS service stability
+       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+       with: 
+          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.ECS_SERVICE }}
+          force-new-deployment: true
+          wait-for-service-stability: true
+           
