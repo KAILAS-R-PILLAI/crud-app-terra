@@ -52,11 +52,14 @@ jobs:
         working-directory: infra
         run: terraform apply -auto-approve 
 
-      - name: Wait for ECS service stability
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          cluster: ${{ env.ECS_CLUSTER }}
-          service: ${{ env.ECS_SERVICE }}
-          force-new-deployment: true
-          wait-for-service-stability: true
+      - name: Force new ECS deployment and wait
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_SERVICE \
+            --force-new-deployment
+
+          aws ecs wait services-stable \
+            --cluster $ECS_CLUSTER \
+            --services $ECS_SERVICE
 
