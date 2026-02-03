@@ -33,7 +33,7 @@ jobs:
         working-directory: app
         run: |
           docker build -t $ECR_REPO:latest .
-          docker push $ECR_REPO:latest/crud-app:latest
+          docker push $ECR_REPO:latest
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
