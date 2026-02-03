@@ -10,7 +10,6 @@ env:
   ECR_REPO: 193086215187.dkr.ecr.ap-south-1.amazonaws.com/crud-app
   ECS_CLUSTER: crud-app-cluster
   ECS_SERVICE: crud-app-service
-  CONTAINER_NAME: crud-app-task
 
 jobs:
   deploy:
@@ -33,9 +32,10 @@ jobs:
       - name: Build and push Docker image
         working-directory: app
         run: |
+          run: |
           docker build -t $ECR_REPO:latest .
-          docker push $ECR_REPO:latest
-          echo "IMAGE_URI=$ECR_REPO:latest" >> $GITHUB_ENV
+          docker push $ECR_REPO:latest/crud-app:latest
+
 
       - name: Terraform Init
         working-directory: infra
