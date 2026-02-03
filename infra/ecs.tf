@@ -2,10 +2,6 @@ resource "aws_ecs_cluster" "this" {
   name = "${var.app_name}-cluster"
 }
 
-data "aws_iam_role" "ecs_task_execution" {
-  name = "ecsTaskExecutionRole"
-}
-
 data "aws_ecr_repository" "this" {
   name = "crud-app"
 }
@@ -19,8 +15,8 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = 256
   memory                   = 512
+  execution_role_arn = aws_iam_role.ecs_task_execution.arn
 
-  execution_role_arn = data.aws_iam_role.ecs_task_execution.arn
 
   container_definitions = jsonencode([
     {
