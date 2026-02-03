@@ -32,7 +32,6 @@ jobs:
       - name: Build and push Docker image
         working-directory: app
         run: |
-          run: |
           docker build -t $ECR_REPO:latest .
           docker push $ECR_REPO:latest/crud-app:latest
 
