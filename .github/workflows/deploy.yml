@@ -52,6 +52,7 @@ jobs:
         working-directory: infra
         run: terraform apply -auto-approve 
 
+
       - name: Force new ECS deployment and wait
         run: |
           aws ecs update-service \
