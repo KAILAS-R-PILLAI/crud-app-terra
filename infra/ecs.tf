@@ -6,7 +6,7 @@ data "aws_ecr_repository" "this" {
   name = "crud-app"
 }
 resource "aws_cloudwatch_log_group" "this" {
-  name = "/ecs/${var.app_name}"
+  name = "/ecs/${var.app_name}-task"
 }
 
 resource "aws_ecs_task_definition" "this" {
